@@ -1,0 +1,14 @@
+
+### Extrato
+GET http://localhost:8080/clientes/1/extrato
+Content-Type: application/json
+
+### Transação
+POST http://localhost:8080/clientes/1/transacoes
+Content-Type: application/json
+
+{
+  "valor": 6666,
+  "tipo" : "d",
+  "descricao" : "vhs"
+}
