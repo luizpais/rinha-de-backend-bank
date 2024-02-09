@@ -19,7 +19,7 @@ import java.util.Optional;
         @NamedQuery(name = "Movimento.findByIdCliente",
                 query = "SELECT m FROM Movimento m WHERE m.idCliente = ?1 " +
                         "order by m.dataMovimento desc " +
-                        "LIMIT 10", lockMode = LockModeType.PESSIMISTIC_WRITE)
+                        "LIMIT 10", lockMode = LockModeType.PESSIMISTIC_READ)
 })
 @Builder
 @NoArgsConstructor

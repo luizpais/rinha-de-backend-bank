@@ -23,6 +23,8 @@ public class ContaCorrenteService {
 
     @Transactional
     public RestResponse<ExtratoResponse> extrato(Long id) {
+        if(id > 5)
+            return RestResponse.notFound();
         var conta = (ContaCorrente) ContaCorrente.findById(id);
         if (conta == null) {
             return RestResponse.notFound();
