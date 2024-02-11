@@ -68,11 +68,64 @@ class ContaCorrenteResourceTest {
     }
 
     @Test
-    void deveRetornar404ParaClienteInexistente() {
+    void deveRetornar404ParaClienteInexistenteNaTransacao() {
         given()
                 .contentType(ContentType.JSON)
                 .body(new TransacaoRequest(100, "teste", "d"))
         .when().post("/clientes/6/transacoes")
         .then().statusCode(404);
+    }
+
+    @Test
+    void deveRetornar422ParaSaldoInvalido() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(new TransacaoRequest(9999999999L, "teste", "d"))
+                .when().post("/clientes/1/transacoes")
+                .then().statusCode(422);
+    }
+
+    @Test
+    void deveRetornar422ParaValorNaoInteiro() {
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"valor\": 1.2, \"tipo\": \"c\", \"descricao\": \"ok\"}")
+                .when().post("/clientes/1/transacoes")
+                .then().statusCode(422);
+    }
+
+    @Test
+    void deveRetornar422ParaValorTexto() {
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"valor\": \"ok\", \"tipo\": \"c\", \"descricao\": \"ok\"}")
+                .when().post("/clientes/1/transacoes")
+                .then().statusCode(422);
+    }
+
+    @Test
+    void deveRetornar404ParaClienteInexistenteNoExtrato() {
+        given()
+                .contentType(ContentType.JSON)
+                .when().get("/clientes/6/extrato")
+                .then().statusCode(404);
+    }
+
+    @Test
+    void deveRetornar200ParaTransacaoComSucesso1() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(new TransacaoRequest(6666, "teste", "d"))
+                .when().post("/clientes/1/transacoes")
+                .then().statusCode(200);
+    }
+
+    @Test
+    void deveRetornar200ParaTransacaoComSucesso2() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(new TransacaoRequest(100, "teste", "d"))
+                .when().post("/clientes/1/transacoes")
+                .then().statusCode(200);
     }
 }

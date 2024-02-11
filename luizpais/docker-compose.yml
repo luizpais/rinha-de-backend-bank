@@ -4,11 +4,8 @@ services:
   api01: &api
     # Lembre-se de que seu serviço HTTP deve estar hospedado num repositório
     # publicamente acessível! Ex.: hub.docker.com
-    image: rinha-de-backend-banck:stage
+    image: docker.io/andre/rinha-de-backend-bank:1.0.0-SNAPSHOT
     hostname: api01
-    environment:
-      - DB_HOSTNAME=db
-
     # Não é necessário expor qualquer porta além da porta do load balancer,
     # mas é comum as pessoas o fazerem para testarem suas APIs e conectarem
     # ao banco de dados na fase de desenvolvimento.
@@ -26,8 +23,6 @@ services:
     # Essa sintaxe reusa o que foi declarado em 'api01'.
     <<: *api
     hostname: api02
-    environment:
-      - DB_HOSTNAME=db
     ports:
       - "8082:8080"
 
@@ -51,21 +46,18 @@ services:
     image: postgres:latest
     hostname: db
     environment:
-      - POSTGRES_PASSWORD=rinha
-      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=backend
+      - POSTGRES_USER=postgres
       - POSTGRES_DB=dbrinha
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - ./sql/script.sql:/docker-entrypoint-initdb.d/script.sql
+    command: postgres -c checkpoint_timeout=600 -c max_wal_size=4096 -c synchronous_commit=0 -c full_page_writes=0
     deploy:
       resources:
         limits:
-          # Note que a soma de todos os limites dos serviços
-          # aqui declarados é de 1.5 unidades de CPU e 550MB
-          # de memória. A distribuição feita aqui é apenas
-          # um exemplo – distribua como quiser.
-          cpus: "0.13"
+          cpus: "0.25"
           memory: "140MB"
 
 # O uso do modo `bridge` deve ser adequado à carga que será usada no teste.
