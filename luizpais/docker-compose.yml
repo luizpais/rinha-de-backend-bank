@@ -9,6 +9,10 @@ services:
     # Não é necessário expor qualquer porta além da porta do load balancer,
     # mas é comum as pessoas o fazerem para testarem suas APIs e conectarem
     # ao banco de dados na fase de desenvolvimento.
+    environment:
+      - quarkus.datasource.reactive.url=vertx-reactive:postgresql://db:5432/dbrinha
+      - quarkus.datasource.username=rinha
+      - quarkus.datasource.password=backend
     ports:
       - "8081:8080"
     depends_on:
@@ -16,7 +20,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.6"
+          cpus: "0.55"
           memory: "200MB"
 
   api02:
@@ -39,7 +43,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.17"
+          cpus: "0.15"
           memory: "10MB"
 
   db:
@@ -47,7 +51,7 @@ services:
     hostname: db
     environment:
       - POSTGRES_PASSWORD=backend
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=rinha
       - POSTGRES_DB=dbrinha
     ports:
       - "5432:5432"
