@@ -112,7 +112,16 @@ class ContaCorrenteResourceTest {
     }
 
     @Test
-    void deveRetornar200ParaTransacaoComSucesso1() {
+    void deveRetornar200ParaTransacaoDeCreditoComSucesso() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(new TransacaoRequest(6666, "teste", "c"))
+                .when().post("/clientes/1/transacoes")
+                .then().statusCode(200);
+    }
+
+    @Test
+    void deveRetornar200ParaTransacaoDeDebitoComSucesso1() {
         given()
                 .contentType(ContentType.JSON)
                 .body(new TransacaoRequest(6666, "teste", "d"))
@@ -121,7 +130,7 @@ class ContaCorrenteResourceTest {
     }
 
     @Test
-    void deveRetornar200ParaTransacaoComSucesso2() {
+    void deveRetornar200ParaTransacaoDeDebitoComSucesso2() {
         given()
                 .contentType(ContentType.JSON)
                 .body(new TransacaoRequest(100, "teste", "d"))

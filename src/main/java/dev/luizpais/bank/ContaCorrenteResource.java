@@ -18,39 +18,42 @@ import java.util.HashMap;
 
 @Path("/")
 public class ContaCorrenteResource {
+    ObjectMapper objectMapper = new ObjectMapper();
+
     @Inject
     ContaCorrenteService contaCorrenteService;
 
     @Path("clientes/{id}/extrato")
     @GET
-    @Consumes("application/json")
-    @Produces("application/json")
     public Uni<ExtratoResponse> extrato(long id) {
         return contaCorrenteService.extrato(id).log("extrato");
     }
-
-    @Inject ObjectMapper objectMapper;
 
     @Path("clientes/{id}/transacoes")
     @POST
     public Uni<RestResponse<TransacaoResponse>> transacao(long id, String requestString) {
         TransacaoRequest request;
+        Log.warn("Recebendo transacao: " + requestString);
         try {
             JsonNode jsonNode = objectMapper.readTree(requestString);
             double valor = jsonNode.get("valor").asDouble();
             if (valor % 1 != 0) {
+                Log.warn("Valor com centavos");
                 return Uni.createFrom().item(RestResponse.status(422));
             }
             request = objectMapper.readValue(requestString, TransacaoRequest.class);
         } catch (JsonProcessingException e) {
+            Log.warn("Erro no parse do json");
             return Uni.createFrom().item(RestResponse.status(422));
         }
 
         if (request.descricao() == null || request.descricao().length() > 10 || request.descricao().isEmpty()
                 || request.tipo() == null || (!request.tipo().equals("d") && !request.tipo().equals("c"))
                 || request.valor() <= 0) {
+            Log.warn("Erro no request");
             return Uni.createFrom().item(RestResponse.status(422));
         }
+        Log.info("Transacao valida");
         return contaCorrenteService.transacao(id, request).log("transacao");
     }
 
