@@ -17,8 +17,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.25"
-          memory: "50MB"
+          cpus: "0.20"
+          memory: "25MB"
 
   api02:
     # Essa sintaxe reusa o que foi declarado em 'api01'.
@@ -41,7 +41,7 @@ services:
       resources:
         limits:
           cpus: "0.20"
-          memory: "20MB"
+          memory: "10MB"
 
   db:
     image: postgres:latest
@@ -58,8 +58,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.8"
-          memory: "200MB"
+          cpus: "0.6"
+          memory: "90MB"
 networks:
   default:
     driver: bridge
