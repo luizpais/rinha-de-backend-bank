@@ -1,7 +1,11 @@
 package dev.luizpais.bank;
 
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class TransacaoRequest {
-    public long valor;
+
+    public double valor;
     public String descricao;
     public String tipo;
 }

@@ -4,7 +4,7 @@ services:
   api01: &api
     # Lembre-se de que seu serviço HTTP deve estar hospedado num repositório
     # publicamente acessível! Ex.: hub.docker.com
-    image: rinha-de-backend-banck:stage
+    image: rinha-de-backend-bank:stage
     hostname: api01
     environment:
       - DB_HOSTNAME=db
@@ -41,6 +41,7 @@ services:
     ports:
       # Obrigatório expor/usar a porta 9999 no load balancer!
       - "9999:9999"
+      - "9998:9998"
     deploy:
       resources:
         limits:

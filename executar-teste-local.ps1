@@ -1,7 +1,7 @@
 # Use este script para executar testes locais
 
 $RESULTS_WORKSPACE = "$(Get-Location)\load-test\user-files\results"
-$GATLING_BIN_DIR = "$env:USERPROFILE\gatling\3.10.3\bin"
+$GATLING_BIN_DIR = "$env:GATLING_HOME\bin"
 $GATLING_WORKSPACE = "$(Get-Location)\load-test\user-files"
 
 function Run-Gatling {
@@ -15,9 +15,9 @@ function Start-Test {
     for ($i = 1; $i -le 20; $i++) {
         try {
             # 2 requests to wake the 2 API instances up :)
-            Invoke-RestMethod -Uri "http://localhost:8080/clientes/1/extrato" -ErrorAction Stop
+            Invoke-RestMethod -Uri "http://localhost:9999/clientes/1/extrato" -ErrorAction Stop
             Write-Host ""
-            Invoke-RestMethod -Uri "http://localhost:8080/clientes/1/extrato" -ErrorAction Stop
+            Invoke-RestMethod -Uri "http://localhost:9999/clientes/1/extrato" -ErrorAction Stop
             Write-Host ""
             Run-Gatling
             break

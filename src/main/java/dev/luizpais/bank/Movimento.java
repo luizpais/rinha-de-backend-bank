@@ -1,6 +1,8 @@
 package dev.luizpais.bank;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.smallrye.mutiny.Uni;
 import jakarta.persistence.*;
 import jakarta.ws.rs.QueryParam;
 import lombok.*;
@@ -45,7 +47,7 @@ public class Movimento extends PanacheEntityBase {
     @Column(name = "data_movimento")
     private LocalDateTime dataMovimento;
 
-    public static Optional<List<Movimento>> findMovimentoByIdCliente(long idCliente) {
+    public static Optional<Uni<List<Movimento>>> findMovimentoByIdCliente(long idCliente) {
         return Optional.ofNullable(list("#Movimento.findByIdCliente", idCliente));
     }
 

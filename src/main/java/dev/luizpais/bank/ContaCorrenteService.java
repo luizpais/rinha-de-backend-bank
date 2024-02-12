@@ -1,82 +1,83 @@
 package dev.luizpais.bank;
 
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.TransactionManager;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ContaCorrenteService {
 
-    @Transactional
-    public RestResponse<ExtratoResponse> extrato(Long id) {
-        if(id > 5)
-            return RestResponse.notFound();
-        var conta = (ContaCorrente) ContaCorrente.findById(id);
-        if (conta == null) {
-            return RestResponse.notFound();
-        }
+    @WithTransaction
+    public Uni<RestResponse<ExtratoResponse>> extrato(Long id) {
+        if (id > 5)
+            return Uni.createFrom().item(RestResponse.notFound());
+
         var extrato = new ExtratoResponse();
-        var saldo = new ExtratoResponse.SaldoAtual();
-        saldo.total = conta.getSaldo();
-        saldo.limite = conta.getLimite();
-        saldo.data_extrato = LocalDateTime.now();
-        extrato.saldo = saldo;
-        var movimentos = Movimento.findMovimentoByIdCliente(id);
-        movimentos.ifPresent((movs) -> extrato.ultimas_transacoes = movs.stream().map(movimento -> {
-            var transacao = new ExtratoResponse.Transacao();
-            transacao.descricao = movimento.getDescricao();
-            transacao.tipo = movimento.getTipo();
-            transacao.valor = movimento.getValor();
-            transacao.realizada_em = movimento.getDataMovimento();
-            return transacao;
-        }).collect(Collectors.toList()));
-        return RestResponse.ResponseBuilder.ok(extrato).build();
+
+        return ContaCorrente.findById(id).onItem().ifNotNull().transformToUni(conta -> {
+            var saldo = new ExtratoResponse.SaldoAtual();
+            saldo.total = ((ContaCorrente) conta).getSaldo();
+            saldo.limite = ((ContaCorrente) conta).getLimite();
+            saldo.data_extrato = LocalDateTime.now();
+            extrato.saldo = saldo;
+
+            var movimentos = Movimento.findMovimentoByIdCliente(id);
+            if (movimentos.isPresent()) {
+                return movimentos.get().onItem().transformToUni(movimento -> {
+                    extrato.ultimas_transacoes = movimento.stream().map(mov -> {
+                        var transacao = new ExtratoResponse.Transacao();
+                        transacao.realizada_em = mov.getDataMovimento();
+                        transacao.descricao = mov.getDescricao();
+                        transacao.tipo = mov.getTipo();
+                        transacao.valor = mov.getValor();
+                        return transacao;
+                    }).collect(Collectors.toList());
+                    return Uni.createFrom().item(RestResponse.ResponseBuilder.ok(extrato).build());
+                });
+            } else {
+                return Uni.createFrom().item(RestResponse.ResponseBuilder.ok(extrato).build());
+            }
+
+        }).onItem().ifNull().continueWith(RestResponse::notFound);
     }
 
 
-    @Transactional
-    public RestResponse<TransacaoResponse> transacao(long id, TransacaoRequest request) throws SaldoInsuficienteException {
-        var conta = (ContaCorrente) ContaCorrente.findById(id);
-        if (conta == null) {
-            return RestResponse.notFound();
-        }
-        var movimento = new Movimento();
-        if (request.tipo.equals("d")) {
-            if (conta.getSaldo() - request.valor < -conta.getLimite()) {
-                throw new SaldoInsuficienteException("Saldo insuficiente");
+    @WithTransaction
+    public Uni<RestResponse<TransacaoResponse>> transacao(long id, TransacaoRequest request) throws SaldoInsuficienteException {
+        if (id > 5)
+            return Uni.createFrom().item(RestResponse.notFound());
+        var contaUni = ContaCorrente.findById(id);
+        return contaUni.onItem().transformToUni(cta -> {
+
+            var conta = (ContaCorrente) cta;
+            var movimento = new Movimento();
+            if (request.tipo.equals("d")) {
+                if (conta.getSaldo() - request.valor < -conta.getLimite()) {
+                    throw new SaldoInsuficienteException("Saldo insuficiente");
+                }
+                conta.setSaldo(conta.getSaldo() - (long) request.valor);
+            } else if (request.tipo.equals("c")) {
+                conta.setSaldo(conta.getSaldo() + (long) request.valor);
             }
-            conta.setSaldo(conta.getSaldo() - request.valor);
-        } else if (request.tipo.equals("c")) {
-            conta.setSaldo(conta.getSaldo() + request.valor);
-        }
-        Calendar calendar = Calendar.getInstance();
+            movimento.setDataMovimento(LocalDateTime.now());
+            movimento.setDescricao(request.descricao);
+            movimento.setIdCliente(conta.getId());
+            movimento.setTipo(request.tipo);
+            movimento.setValor((long) request.valor);
+            movimento.persist();
 
-        movimento.setDataMovimento(LocalDateTime.now());
-        movimento.setDescricao(request.descricao);
-        movimento.setIdCliente(conta.getId());
-        movimento.setTipo(request.tipo);
-        movimento.setValor(request.valor);
-        movimento.persist();
-
-        conta.persist();
-        var response = new TransacaoResponse();
-        response.limite = conta.getLimite();
-        response.saldo = conta.getSaldo();
-        return RestResponse.ResponseBuilder.ok(response).build();
+            conta.persist();
+            var response = new TransacaoResponse();
+            response.limite = conta.getLimite();
+            response.saldo = conta.getSaldo();
+            return Uni.createFrom().item(RestResponse.ok(response));
+        }).onItem().ifNull().continueWith(() -> {
+            throw new SaldoInsuficienteException("Saldo insuficiente");
+        });
 
     }
 }

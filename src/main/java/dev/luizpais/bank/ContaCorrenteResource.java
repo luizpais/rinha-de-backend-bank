@@ -1,18 +1,18 @@
 package dev.luizpais.bank;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import javax.naming.ldap.ExtendedResponse;
 import java.util.HashMap;
 
 @Path("/")
 @Slf4j
 public class ContaCorrenteResource {
 
-    HashMap<Long, RestResponse<ExtratoResponse>> extratos = new HashMap<>();
+    HashMap<Long, Uni<RestResponse<ExtratoResponse>>> extratos = new HashMap<>();
 
     @Inject
     ContaCorrenteService contaCorrenteService;
@@ -21,33 +21,36 @@ public class ContaCorrenteResource {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public RestResponse<ExtratoResponse> extrato(Long id) {
+    public Uni<RestResponse<ExtratoResponse>> extrato(Long id) {
         log.info("Extrato para o cliente: {}", id);
-        var extrato = extratos.get(id);
-        if (extrato == null) {
-            extrato = contaCorrenteService.extrato(id);
-            extratos.put(id, extrato);
-        }
-        return extrato;
+//        var extrato = extratos.get(id);
+//        if (extrato == null) {
+//
+//            extratos.put(id, extrato);
+//        }
+        return contaCorrenteService.extrato(id);
     }
 
     @Path("clientes/{id}/transacoes")
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public RestResponse<TransacaoResponse> transacao(long id, TransacaoRequest request) {
-        if ((request.descricao != null && request.descricao.length() > 10)
-                || (request.tipo != null && !request.tipo.equals("d") && !request.tipo.equals("c")
-                || (request.valor <= 0))) {
-            return RestResponse.status(422);
+    public Uni<RestResponse<TransacaoResponse>> transacao(long id, TransacaoRequest request) {
+        if ((request.descricao == null)
+            || (request.descricao.length() > 10 || request.descricao.isEmpty())
+                || (request.tipo == null)
+                || (!request.tipo.equals("d") && !request.tipo.equals("c"))
+                || (request.valor <= 0)
+                || (request.valor - (long) request.valor > 0.0)) {
+            return Uni.createFrom().item(RestResponse.status(422));
         }
-        try {
-            var retorno = contaCorrenteService.transacao(id, request);
-            extratos.remove(id);
-            return retorno;
-        } catch (SaldoInsuficienteException e) {
-            return RestResponse.status(402);
-        }
+        var retorno = contaCorrenteService.transacao(id, request);
+        return retorno.onFailure().recoverWithItem(ex -> {
+            if (ex instanceof SaldoInsuficienteException) {
+                return RestResponse.status(422);
+            }
+            return RestResponse.status(500);
+        }).onItem().transformToUni(item -> Uni.createFrom().item(item));
 
     }
 }
