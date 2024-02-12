@@ -3,6 +3,7 @@ package dev.luizpais.bank;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.NotFoundException;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import java.time.LocalDateTime;
@@ -12,9 +13,9 @@ import java.util.stream.Collectors;
 public class ContaCorrenteService {
 
     @WithTransaction
-    public Uni<RestResponse<ExtratoResponse>> extrato(Long id) {
+    public Uni<ExtratoResponse> extrato(Long id) {
         if (id > 5)
-            return Uni.createFrom().item(RestResponse.notFound());
+            throw new NotFoundException();
 
         var extrato = new ExtratoResponse();
 
@@ -36,13 +37,13 @@ public class ContaCorrenteService {
                         transacao.valor = mov.getValor();
                         return transacao;
                     }).collect(Collectors.toList());
-                    return Uni.createFrom().item(RestResponse.ResponseBuilder.ok(extrato).build());
+                    return Uni.createFrom().item(extrato);
                 });
             } else {
-                return Uni.createFrom().item(RestResponse.ResponseBuilder.ok(extrato).build());
+                return Uni.createFrom().item(extrato);
             }
 
-        }).onItem().ifNull().continueWith(RestResponse::notFound);
+        }).onItem().ifNull().failWith(new NotFoundException());
     }
 
 

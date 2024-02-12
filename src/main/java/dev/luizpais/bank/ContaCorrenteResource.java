@@ -21,13 +21,8 @@ public class ContaCorrenteResource {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public Uni<RestResponse<ExtratoResponse>> extrato(Long id) {
+    public Uni<ExtratoResponse> extrato(Long id) {
         log.info("Extrato para o cliente: {}", id);
-//        var extrato = extratos.get(id);
-//        if (extrato == null) {
-//
-//            extratos.put(id, extrato);
-//        }
         return contaCorrenteService.extrato(id);
     }
 
