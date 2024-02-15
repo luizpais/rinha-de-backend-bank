@@ -15,12 +15,28 @@ import java.util.Optional;
 @Getter
 @Entity
 @Table(name = "movimentos")
-@NamedQueries({
-        @NamedQuery(name = "Movimento.findByIdCliente",
-                query = "SELECT m FROM Movimento m WHERE m.idCliente = ?1 " +
-                        "order by m.dataMovimento desc " +
-                        "LIMIT 10", lockMode = LockModeType.PESSIMISTIC_READ)
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Movimento.findByIdCliente",
+                query = "SELECT m.descricao, m.tipo, m.valor, m.data_movimento, m.saldo " +
+                        "FROM movimentos m WHERE m.id_cliente = ?1 " +
+                        "order by m.data_movimento desc " +
+                        "LIMIT 10",
+                resultSetMapping = "MovimentoMapping")
+
 })
+
+@SqlResultSetMapping(
+        name = "MovimentoMapping",
+        classes = @ConstructorResult(
+                targetClass = MovimentoDto.class,
+                columns = {
+                        @ColumnResult(name = "descricao", type = String.class),
+                        @ColumnResult(name = "tipo", type = String.class),
+                        @ColumnResult(name = "valor", type = Long.class),
+                        @ColumnResult(name = "data_movimento", type = LocalDateTime.class),
+                        @ColumnResult(name = "saldo", type = Long.class)
+                })
+)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
