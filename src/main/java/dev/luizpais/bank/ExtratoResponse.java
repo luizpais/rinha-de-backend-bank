@@ -5,12 +5,10 @@ import java.util.List;
 
 public record ExtratoResponse(
         SaldoAtual saldo,
-        List<Transacao> ultimas_transacoes) {
+        List<MovimentoDto> ultimas_transacoes) {
 
     record SaldoAtual(long total, long limite, LocalDateTime data_extrato) {
     }
 
-    record Transacao(String descricao, String tipo, long valor, LocalDateTime realizada_em) {
-    }
 
 }

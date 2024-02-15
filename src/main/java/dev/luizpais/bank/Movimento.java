@@ -2,12 +2,9 @@ package dev.luizpais.bank;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
-import jakarta.ws.rs.QueryParam;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +57,9 @@ public class Movimento extends PanacheEntityBase {
 
     @Column(name = "data_movimento")
     private LocalDateTime dataMovimento;
+
+    @Column(name = "saldo")
+    private long saldo;
 
     public static Optional<List<Movimento>> findMovimentoByIdCliente(long idCliente) {
         return Optional.ofNullable(list("#Movimento.findByIdCliente", idCliente));
