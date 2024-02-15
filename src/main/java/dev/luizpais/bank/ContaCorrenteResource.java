@@ -31,12 +31,12 @@ public class ContaCorrenteResource {
     @Consumes("application/json")
     @Produces("application/json")
     public Uni<RestResponse<TransacaoResponse>> transacao(long id, TransacaoRequest request) {
-        if ((request.descricao == null)
-            || (request.descricao.length() > 10 || request.descricao.isEmpty())
-                || (request.tipo == null)
-                || (!request.tipo.equals("d") && !request.tipo.equals("c"))
-                || (request.valor <= 0)
-                || (request.valor - (long) request.valor > 0.0)) {
+        if ((request.descricao() == null)
+            || (request.descricao().length() > 10 || request.descricao().isEmpty())
+                || (request.tipo() == null)
+                || (!request.tipo().equals("d") && !request.tipo().equals("c"))
+                || (request.valor() <= 0)
+                || (request.valor() - (long) request.valor() > 0.0)) {
             return Uni.createFrom().item(RestResponse.status(422));
         }
         var retorno = contaCorrenteService.transacao(id, request);

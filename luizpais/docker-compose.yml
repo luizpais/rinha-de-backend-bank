@@ -16,6 +16,7 @@ services:
       - "8081:8080"
     depends_on:
       - db
+      - cache
     deploy:
       resources:
         limits:
@@ -69,6 +70,15 @@ services:
           cpus: "0.13"
           memory: "140MB"
 
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning #--requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
+
 # O uso do modo `bridge` deve ser adequado à carga que será usada no teste.
 # A edição anterior se beneficiou do modo host pois o volume de requisições
 # era relativamente alto e a virtualização da rede se tornou um gargalo, mas
@@ -79,3 +89,6 @@ networks:
   default:
     driver: bridge
     name: rinha-nginx-2024q1
+volumes:
+  cache:
+    driver: local

@@ -1,11 +1,6 @@
 package dev.luizpais.bank;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+record TransacaoRequest (double valor, String descricao, String tipo) {
 
-public class TransacaoRequest {
-
-    public double valor;
-    public String descricao;
-    public String tipo;
 }

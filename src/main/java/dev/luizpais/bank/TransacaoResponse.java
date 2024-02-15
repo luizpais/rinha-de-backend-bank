@@ -1,7 +1,5 @@
 package dev.luizpais.bank;
 
-public class TransacaoResponse {
-    public long limite;
+record TransacaoResponse (long limite, long saldo) {
 
-    public long saldo;
 }

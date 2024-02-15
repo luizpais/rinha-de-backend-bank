@@ -3,8 +3,23 @@
 GET http://localhost:9999/clientes/1/extrato
 Content-Type: application/json
 
+### Extrato8081
+GET http://localhost:8081/clientes/1/extrato
+Content-Type: application/json
+
 ### Transação
 POST http://localhost:9998/clientes/1/transacoes
+Content-Type: application/json
+
+{
+  "valor": "1000",
+  "tipo" : "d",
+  "descricao" : "devolve"
+}
+
+
+### Transação8081
+POST http://localhost:8081/clientes/1/transacoes
 Content-Type: application/json
 
 {
