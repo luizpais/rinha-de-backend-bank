@@ -36,6 +36,7 @@ CREATE TABLE public.movimentos
     tipo           varchar(1) NULL,
     descricao      varchar(10) NULL,
     data_movimento timestamp NULL,
+    saldo int8 NULL,
     CONSTRAINT movimentos_pk PRIMARY KEY (id)
 );
 

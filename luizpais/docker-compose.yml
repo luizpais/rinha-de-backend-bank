@@ -48,23 +48,14 @@ services:
           memory: "10MB"
 
   db:
-    image: postgres:latest
-    hostname: db
-    environment:
-      - POSTGRES_PASSWORD=rinha
-      - POSTGRES_USER=backend
-      - POSTGRES_DB=dbrinha
-    ports:
-      - "5433:5432"
+    image: nouchka/sqlite3:latest
+    stdin_open: true
+    tty: true
     volumes:
-      - ./sql/script.sql:/docker-entrypoint-initdb.d/script.sql
+      - ./db/:/root/db/
     deploy:
       resources:
         limits:
-          # Note que a soma de todos os limites dos serviços
-          # aqui declarados é de 1.5 unidades de CPU e 550MB
-          # de memória. A distribuição feita aqui é apenas
-          # um exemplo – distribua como quiser.
           cpus: "0.13"
           memory: "140MB"
 

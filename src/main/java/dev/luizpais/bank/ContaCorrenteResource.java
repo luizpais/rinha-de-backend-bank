@@ -48,7 +48,7 @@ public class ContaCorrenteResource {
             extratos.remove(id);
             return retorno;
         } catch (SaldoInsuficienteException e) {
-            return RestResponse.status(402);
+            return RestResponse.status(422);
         }
 
     }
