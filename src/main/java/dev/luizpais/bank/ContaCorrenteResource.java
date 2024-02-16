@@ -33,7 +33,7 @@ public class ContaCorrenteResource {
     @POST
     public Uni<RestResponse<TransacaoResponse>> transacao(long id, String requestString) {
         TransacaoRequest request;
-        Log.warn("Recebendo transacao: " + requestString);
+        Log.info("Recebendo transacao: " + requestString);
         try {
             JsonNode jsonNode = objectMapper.readTree(requestString);
             double valor = jsonNode.get("valor").asDouble();
@@ -43,7 +43,7 @@ public class ContaCorrenteResource {
             }
             request = objectMapper.readValue(requestString, TransacaoRequest.class);
         } catch (JsonProcessingException e) {
-            Log.warn("Erro no parse do json");
+            Log.error("Erro no parse do json");
             return Uni.createFrom().item(RestResponse.status(422));
         }
 
@@ -53,7 +53,7 @@ public class ContaCorrenteResource {
             Log.warn("Erro no request");
             return Uni.createFrom().item(RestResponse.status(422));
         }
-        Log.info("Transacao valida");
+        Log.info("Transacao validada");
         return contaCorrenteService.transacao(id, request).log("transacao");
     }
 

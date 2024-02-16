@@ -5,6 +5,7 @@ import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.LockModeType;
 import jakarta.ws.rs.NotFoundException;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -30,7 +31,7 @@ public class ContaCorrenteService {
 
     @WithTransaction
     public Uni<RestResponse<TransacaoResponse>> transacao(long id, TransacaoRequest request) {
-        return ContaCorrente.<ContaCorrente>findById(id)
+        return ContaCorrente.<ContaCorrente>findById(id, LockModeType.PESSIMISTIC_WRITE)
                 .onItem().ifNull().failWith(new NotFoundException())
                 .call(Unchecked.function(contaCorrente -> {
                     var movimento = new Movimento();

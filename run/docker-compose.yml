@@ -27,7 +27,7 @@ services:
       - quarkus.datasource.username=rinha
       - quarkus.datasource.password=backend
       - quarkus.datasource.reactive.max-size=10
-#      - quarkus.log.level=OFF
+      - quarkus.log.level=OFF
       - quarkus.http.port=8082
 
   nginx:
