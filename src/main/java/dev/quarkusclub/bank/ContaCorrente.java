@@ -1,4 +1,4 @@
-package dev.luizpais.bank;
+package dev.quarkusclub.bank;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import jakarta.persistence.*;

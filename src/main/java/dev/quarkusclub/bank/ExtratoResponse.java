@@ -1,4 +1,4 @@
-package dev.luizpais.bank;
+package dev.quarkusclub.bank;
 
 import java.time.LocalDateTime;
 import java.util.List;

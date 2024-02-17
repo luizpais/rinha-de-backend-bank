@@ -1,4 +1,4 @@
-package dev.luizpais.bank;
+package dev.quarkusclub.bank;
 
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
@@ -10,9 +10,7 @@ import jakarta.ws.rs.NotFoundException;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ContaCorrenteService {
