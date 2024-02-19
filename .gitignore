@@ -12,6 +12,8 @@ release.properties
 .settings/
 bin/
 
+load-test/
+
 # IntelliJ
 .idea
 *.ipr
