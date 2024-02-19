@@ -1,3 +1,4 @@
+
 create table public.contacorrente
 (
     id     bigint not null primary key,
