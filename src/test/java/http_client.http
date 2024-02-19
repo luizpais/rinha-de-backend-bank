@@ -1,10 +1,25 @@
 
 ### Extrato
+for( int n = 1; n < 100; n++){
 GET http://localhost:9999/clientes/1/extrato
 Content-Type: application/json
-
+}
 ### Transação
 POST http://localhost:9999/clientes/1/transacoes
+Content-Type: application/json
+
+{
+  "valor": 6666,
+  "tipo" : "d",
+  "descricao" : "vhs"
+}
+
+### Extrato2
+GET http://localhost:8082/clientes/1/extrato
+Content-Type: application/json
+
+### Transação2
+POST http://localhost:8082/clientes/1/transacoes
 Content-Type: application/json
 
 {

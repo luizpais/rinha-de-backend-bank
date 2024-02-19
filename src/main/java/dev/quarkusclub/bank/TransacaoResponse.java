@@ -1,4 +1,4 @@
-package dev.luizpais.bank;
+package dev.quarkusclub.bank;
 
 public record TransacaoResponse(
         long limite,

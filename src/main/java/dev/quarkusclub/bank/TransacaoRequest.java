@@ -1,4 +1,4 @@
-package dev.luizpais.bank;
+package dev.quarkusclub.bank;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 

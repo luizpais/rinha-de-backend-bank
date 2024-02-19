@@ -1,5 +1,7 @@
 package dev.luizpais.bank;
 
+
+import dev.quarkusclub.bank.TransacaoRequest;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
