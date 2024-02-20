@@ -2,8 +2,8 @@ version: "3.5"
 
 services:
   api01: &api
-    #image: docker.io/rinha/rinha-de-backend-bank:latest
-    image: luizpais/rinha-de-backend-bank:1.0.0
+    image: docker.io/luizpais/rinha-de-backend-bank:1.0.0
+    #image: luizpais/rinha-de-backend-bank:1.0.0
     hostname: api01
     environment:
       - quarkus.datasource.reactive.url=vertx-reactive:postgresql://db:5432/dbrinha
@@ -63,5 +63,5 @@ services:
           memory: "200MB"
 networks:
   default:
-    driver: bridge
+    driver: host
     name: rinha-nginx-2024q1

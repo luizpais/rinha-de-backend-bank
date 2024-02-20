@@ -1,9 +1,9 @@
 
 ### Extrato
-for( int n = 1; n < 100; n++){
+
 GET http://localhost:9999/clientes/1/extrato
 Content-Type: application/json
-}
+
 ### Transação
 POST http://localhost:9999/clientes/1/transacoes
 Content-Type: application/json
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Extrato2
-GET http://localhost:8082/clientes/1/extrato
+GET http://localhost:8088/clientes/1/extrato
 Content-Type: application/json
 
 ### Transação2
