@@ -34,7 +34,9 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Deploy Image
-      run: docker push luizpais/rinha-de-backend-bank:1.0.0
+      run: 
+        docker push luizpais/rinha-de-backend-bank:1.0.0
+        docker images
     - name: Docker Logout
       run: docker logout
 
