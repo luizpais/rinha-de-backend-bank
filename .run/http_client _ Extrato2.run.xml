@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="http_client | Extrato2" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" nameIsGenerated="true" path="$PROJECT_DIR$/src/test/java/http_client.http" index="3" requestIdentifier="Extrato2" runType="Run single request">
+    <method v="2" />
+  </configuration>
+</component>
