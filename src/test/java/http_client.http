@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Extrato2
-GET http://localhost:8088/clientes/1/extrato
+GET http://localhost:8080/clientes/1/extrato
 Content-Type: application/json
 
 ### Transação2
