@@ -6,3 +6,4 @@
 --        (5, 'zeca diabo', 0, 500000);
 
 update ContaCorrente set saldo = 0 where id = 1;
+truncate Movimento;

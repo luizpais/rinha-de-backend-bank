@@ -26,17 +26,15 @@ jobs:
         java-version: '21.0.2+13'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn quarkus:image-build
+    - name: Build Docker Multistage
+      run: docker build -f src/main/docker/Dockerfile.multistage -t luizpais/rinha-de-backend-bank:1.0.2 .
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Deploy Image
-      run: |
-        docker image tag runner/rinha-de-backend-bank:1.0.0 luizpais/rinha-de-backend-bank:1.0.0
-        docker image push luizpais/rinha-de-backend-bank:1.0.0
+      run: docker image push luizpais/rinha-de-backend-bank:1.0.2
     - name: Docker Logout
       run: docker logout
 
