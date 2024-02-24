@@ -6,7 +6,7 @@ services:
     #image: luizpais/rinha-de-backend-bank:1.0.1
     hostname: api01
     environment:
-      - DB_URL=vertx-reactive:postgresql://127.0.0.1:5432/dbrinha
+      - DB_URL=vertx-reactive:postgresql://db:5432/dbrinha
       - DB_USER_NAME=rinha
       - DB_PASSWORD=backend
       - DB_REACTIVE_MAX=10
@@ -14,7 +14,7 @@ services:
       - SERVER_PORT=8088
     ports:
       - "8088:8088"
-    network_mode: host
+#    network_mode: host
     depends_on:
       db:
         condition: service_healthy
@@ -29,7 +29,7 @@ services:
     <<: *api
     hostname: api02
     environment:
-      - DB_URL=vertx-reactive:postgresql://127.0.0.1:5432/dbrinha
+      - DB_URL=vertx-reactive:postgresql://db:5432/dbrinha
       - DB_USER_NAME=rinha
       - DB_PASSWORD=backend
       - DB_REACTIVE_MAX=10
@@ -37,7 +37,7 @@ services:
       - SERVER_PORT=8089
     ports:
       - "8089:8089"
-    network_mode: host
+#    network_mode: host
 
   nginx:
     image: nginx:latest
@@ -49,7 +49,7 @@ services:
     ports:
       # Obrigatório expor/usar a porta 9999 no load balancer!
       - "9999:9999"
-    network_mode: host
+#    network_mode: host
     deploy:
       resources:
         limits:
@@ -65,7 +65,7 @@ services:
       - POSTGRES_DB=dbrinha
     ports:
       - "5432:5432"
-    network_mode: host
+    #network_mode: host
     volumes:
       - ./sql/script.sql:/docker-entrypoint-initdb.d/script.sql
     command: postgres -c checkpoint_timeout=600 -c max_wal_size=4096 -c synchronous_commit=0 -c full_page_writes=0
@@ -80,7 +80,7 @@ services:
       timeout: 5s
       retries: 20
       start_period: 10s
-#networks:
-#  default:
-#    driver: bridge
-#    name: rinha-nginx-2024q1
+networks:
+  default:
+    driver: bridge
+    name: rinha-nginx-2024q1
