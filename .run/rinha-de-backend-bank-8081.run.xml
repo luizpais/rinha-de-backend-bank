@@ -9,7 +9,10 @@
             <option name="delegateBuildToMaven" value="false" />
             <option name="environmentProperties">
               <map>
-                <entry key="DB_HOSTNAME" value="localhost" />
+                <entry key="DB_PASSWORD" value="backend" />
+                <entry key="DB_REACTIVE_MAX" value="13" />
+                <entry key="DB_URL" value="vertx-reactive:postgresql://db:5432/dbrinha" />
+                <entry key="DB_USER_NAME" value="rinha" />
                 <entry key="SERVER_PORT" value="8081" />
               </map>
             </option>

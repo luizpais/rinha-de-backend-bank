@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="rinha-de-backend-bank-8082" type="QuarkusRunConfigurationType" factoryName="Quarkus" singleton="false">
+  <configuration default="false" name="rinha-de-backend-bank-8080" type="QuarkusRunConfigurationType" factoryName="Quarkus" singleton="false">
     <module name="rinha-de-backend-bank" />
     <QsMavenRunConfiguration>
       <MavenSettings>
@@ -13,7 +13,7 @@
                 <entry key="DB_REACTIVE_MAX" value="13" />
                 <entry key="DB_URL" value="vertx-reactive:postgresql://db:5432/dbrinha" />
                 <entry key="DB_USER_NAME" value="rinha" />
-                <entry key="SERVER_PORT" value="8082" />
+                <entry key="SERVER_PORT" value="8080" />
               </map>
             </option>
             <option name="jreName" value="#USE_PROJECT_JDK" />
